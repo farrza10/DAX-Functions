@@ -1,0 +1,17 @@
+#ISINSCOPE - Returns TRUE if the column is in included in the filter context and it is a grouping column for the current row in the result set.
+DEFINE
+    MEASURE Sales[Pct over parent] =
+        VAR AllSales =
+            CALCULATE ( [Sales Amount], ALLSELECTED () )
+        VAR CategorySales =
+            CALCULATE ( [Sales Amount], ALLSELECTED (), VALUES ( Product[Category] ) )
+        VAR CurrentSales = [Sales Amount]
+        RETURN
+            SWITCH (
+                TRUE (),
+                ISINSCOPE ( 'Product'[Subcategory] ), DIVIDE ( CurrentSales, CategorySales ),
+                ISINSCOPE ( 'Product'[Category] ),    DIVIDE ( CurrentSales, AllSales )
+            )
+            
+            
+   
